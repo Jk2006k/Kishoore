@@ -4,6 +4,9 @@ export default function Portfolio() {
   const [bubbles, setBubbles] = useState([]);
   const [particles, setParticles] = useState([]);
   const containerRef = useRef(null);
+  const projectsRef = useRef(null);
+  const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
+  const hobbyVideoRef = useRef(null);
 
   // Hero bubbles
   useEffect(() => {
@@ -97,7 +100,7 @@ export default function Portfolio() {
     "Express.js",
     "Git",
     "Tailwind CSS",
-     "SQL",
+    "SQL",
     "AWS",
     "Docker",
     "CI/CD",
@@ -106,6 +109,116 @@ export default function Portfolio() {
   const mid = Math.ceil(skills.length / 2);
   const row1Skills = skills.slice(0, mid);
   const row2Skills = skills.slice(mid);
+
+  // Projects array with distinct images, hrefs and descriptions
+  const projects = [
+    {
+      id: 1,
+      title: 'VoteAura',
+      desc: 'A secure online e-ballot application with UD-ID verification and admin approval flow.',
+      imageSrc: 'https://via.placeholder.com/800x480?text=VoteAura',
+      href: '/projects/voteaura'
+    },
+    {
+      id: 2,
+      title: 'Zenth Music',
+      desc: 'Real-time room-based music streaming where an admin controls playback for all members.',
+      imageSrc: 'https://via.placeholder.com/800x480?text=Zenth+Music',
+      href: '/projects/zenth-music'
+    },
+    {
+      id: 3,
+      title: 'Bookshop Manager',
+      desc: 'Full-stack Bookshop Management System with seeding, purchase flow and admin panel.',
+      imageSrc: './bg.png',
+      href: '/projects/bookshop-manager'
+    },
+    {
+      id: 4,
+      title: 'Blood Bank System',
+      desc: 'Donor management and blood donation recording system built with MongoDB and Express.',
+      imageSrc: 'https://via.placeholder.com/800x480?text=Blood+Bank',
+      href: '/projects/blood-bank'
+    },
+    {
+      id: 5,
+      title: 'PDF→Questions',
+      desc: 'Upload PDFs and auto-generate potential questions using OCR + AI (prototype).',
+      imageSrc: 'https://via.placeholder.com/800x480?text=PDF+to+Questions',
+      href: '/projects/pdf-question-generator'
+    },
+    {
+      id: 6,
+      title: 'Hotel Manager',
+      desc: 'Hotel Management System with guest/room assignment, booking flow and APIs.',
+      imageSrc: 'https://via.placeholder.com/800x480?text=Hotel+Manager',
+      href: '/projects/hotel-manager'
+    },
+    {
+      id: 7,
+      title: 'University Admin',
+      desc: 'University Management portal: courses, enrollments and professor assignment features.',
+      imageSrc: 'https://via.placeholder.com/800x480?text=University+Admin',
+      href: '/projects/university-admin'
+    }
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentProjectIndex((prev) => {
+        const projectsPerPage = window.innerWidth >= 768 ? 3 : 1;
+        return (prev + projectsPerPage) % projects.length;
+      });
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const changeProject = (direction) => {
+    const projectsPerPage = window.innerWidth >= 768 ? 3 : 1;
+    if (direction === 'next') {
+      setCurrentProjectIndex((prev) => (prev + projectsPerPage) % projects.length);
+    } else {
+      setCurrentProjectIndex((prev) => (prev - projectsPerPage + projects.length) % projects.length);
+    }
+  };
+
+  const getVisibleProjects = () => {
+    const projectsPerPage = window.innerWidth >= 768 ? 3 : 1;
+    const visible = [];
+    for (let i = 0; i < projectsPerPage; i++) {
+      visible.push(projects[(currentProjectIndex + i) % projects.length]);
+    }
+    return visible;
+  };
+
+  // IntersectionObserver to play/pause hobby video when it enters/leaves viewport
+  useEffect(() => {
+    const video = hobbyVideoRef.current;
+    if (!video) return;
+    let observer;
+    try {
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const p = video.play();
+              if (p && p.catch) p.catch(() => {});
+            } else {
+              video.pause();
+            }
+          });
+        },
+        { threshold: 0.5 }
+      );
+      observer.observe(video);
+    } catch (e) {
+      video.play().catch(() => {});
+    }
+    return () => {
+      if (observer && video) observer.unobserve(video);
+    };
+  }, []);
 
   return (
     <div
@@ -123,13 +236,13 @@ export default function Portfolio() {
           <div className="flex items-center">
             <img
               src="/logo.png"
-              alt="JK"
+              alt="Logo"
               className="h-16 w-16 object-contain opacity-90"
             />
           </div>
 
           {/* Navigation Links */}
-          <ul className="flex gap-10">
+          <ul className="hidden md:flex gap-10">
             <li>
               <a
                 href="#about"
@@ -144,6 +257,14 @@ export default function Portfolio() {
                 className="text-gray-400 hover:text-[#D4AF37] transition"
               >
                 Skills
+              </a>
+            </li>
+            <li>
+              <a
+                href="#projects"
+                className="text-gray-400 hover:text-[#D4AF37] transition"
+              >
+                Projects
               </a>
             </li>
             <li>
@@ -230,7 +351,7 @@ export default function Portfolio() {
           <div className="flex justify-center items-center">
             <img
               src="/bg.png"
-              alt="JK"
+              alt="Hero"
               className="max-w-md w-full opacity-90 relative -z-10"
             />
           </div>
@@ -455,22 +576,22 @@ export default function Portfolio() {
               }}
             >
               <span className="relative z-10 flex items-center gap-3">
-                <svg 
-                  className="w-5 h-5" 
-                  fill="none" 
-                  stroke="currentColor" 
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2.5} 
-                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" 
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2.5}
+                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"
                   />
                 </svg>
                 Download Resume
               </span>
-              <div 
+              <div
                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                 style={{
                   background: 'linear-gradient(135deg, #FFD700 0%, #D4AF37 100%)',
@@ -478,6 +599,207 @@ export default function Portfolio() {
               />
             </a>
           </div>
+
+          {/* Projects Section */}
+          <section id="projects" className="mt-6 relative z-10 max-w-6xl mx-auto">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <p className="tracking-[0.3em] text-xs text-gray-500">WORK</p>
+                <h3 className="text-3xl font-bold mt-2">Selected Projects</h3>
+              </div>
+            </div>
+
+            {/* Multiple projects display with navigation */}
+            <div className="relative">
+              {/* Desktop navigation buttons */}
+              <button
+                onClick={() => changeProject('prev')}
+                aria-label="Previous projects"
+                className="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 p-3 rounded-full bg-white/5 hover:bg-white/10 transition"
+              >
+                <i className="fas fa-chevron-left"></i>
+              </button>
+              
+              <button
+                onClick={() => changeProject('next')}
+                aria-label="Next projects"
+                className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 p-3 rounded-full bg-white/5 hover:bg-white/10 transition"
+              >
+                <i className="fas fa-chevron-right"></i>
+              </button>
+
+              {/* Project cards grid */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {getVisibleProjects().map((project, idx) => (
+                  <a
+                    key={`${project.id}-${idx}`}
+                    href={project.href}
+                    className="block bg-[#070707] rounded-2xl border border-[#2b2b2b] overflow-hidden shadow-lg hover:shadow-[0_20px_60px_rgba(212,175,55,0.12)] transition transform hover:-translate-y-1"
+                  >
+                    <div className="w-full h-48 md:h-44 overflow-hidden">
+                      <img
+                        src={project.imageSrc}
+                        alt={project.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="p-4">
+                      <h4 className="text-xl md:text-lg font-semibold mb-2">{project.title}</h4>
+                      <p className="text-sm text-gray-300 line-clamp-2 mb-3">{project.desc}</p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-gray-400">React • Node</span>
+                        <span className="text-xs text-[#D4AF37]">View Project →</span>
+                      </div>
+                    </div>
+                  </a>
+                ))}
+              </div>
+
+              {/* Pagination dots */}
+              <div className="flex justify-center gap-2 mt-6">
+                {Array.from({ length: Math.ceil(projects.length / (window.innerWidth >= 768 ? 3 : 1)) }).map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentProjectIndex(index * (window.innerWidth >= 768 ? 3 : 1))}
+                    className={`w-2 h-2 rounded-full transition ${
+                      Math.floor(currentProjectIndex / (window.innerWidth >= 768 ? 3 : 1)) === index ? 'bg-[#D4AF37] w-8' : 'bg-white/20'
+                    }`}
+                    aria-label={`Go to project group ${index + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* ===== Hobby Section (UPDATED) ===== */}
+          <section id="hobby" className="mt-12 relative z-10 max-w-6xl mx-auto px-4">
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <p className="tracking-[0.3em] text-xs font-medium text-yellow-500/80 uppercase">
+            PERSONAL
+          </p>
+          <h3 className="text-3xl md:text-4xl font-bold mt-2 bg-gradient-to-r from-yellow-300 via-yellow-500 to-yellow-600 bg-clip-text text-transparent">
+            Hobby — Listening to songs
+          </h3>
+        </div>
+      </div>
+
+      {/* Main container with elegant hover effects */}
+      <div className="group rounded-3xl overflow-hidden border border-yellow-900/30 bg-gradient-to-br from-zinc-900 to-black shadow-2xl transition-all duration-500 hover:shadow-yellow-500/20 hover:border-yellow-700/50">
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_1.4fr] gap-0 items-stretch">
+          {/* Left column: Video + Stats */}
+          <div className="flex flex-col">
+            {/* Video section */}
+            <a
+              href="https://karangal.online"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block relative overflow-hidden flex-shrink-0"
+            >
+              <div style={{ aspectRatio: '1 / 1', width: '100%' }} className="overflow-hidden relative">
+                <video
+                  ref={hobbyVideoRef}
+                  className="w-full h-full object-cover block transition-transform duration-700 group-hover:scale-110"
+                  src="/head.mp4"
+                  poster="/headimg.jpeg"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                  aria-label="Headset video — click to open karangal.online"
+                />
+                {/* Overlay gradient on hover */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                
+                {/* Play icon overlay */}
+                
+              </div>
+            </a>
+
+            {/* Music Stats - Only visible on desktop */}
+            <div className="hidden md:flex flex-col justify-center flex-1 p-6 bg-gradient-to-br from-yellow-950/20 to-black/40 border-t border-yellow-900/20">
+              <div className="space-y-4">
+                {/* Stat 1 */}
+                <div className="flex items-center gap-3 group/stat">
+                  <div className="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center border border-yellow-500/20 group-hover/stat:bg-yellow-500/20 transition-colors">
+                    <svg className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-yellow-300">1,247</p>
+                    <p className="text-xs text-gray-400">Songs Played</p>
+                  </div>
+                </div>
+
+                {/* Stat 2 */}
+                <div className="flex items-center gap-3 group/stat">
+                  <div className="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center border border-yellow-500/20 group-hover/stat:bg-yellow-500/20 transition-colors">
+                    <svg className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-yellow-300">340</p>
+                    <p className="text-xs text-gray-400">Hours Listening</p>
+                  </div>
+                </div>
+
+                {/* Stat 3 */}
+                <div className="flex items-center gap-3 group/stat">
+                  <div className="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center border border-yellow-500/20 group-hover/stat:bg-yellow-500/20 transition-colors">
+                    <svg className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-yellow-300">42</p>
+                    <p className="text-xs text-gray-400">Playlists</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Image column with parallax effect */}
+          <div className="flex items-center justify-center p-6 md:p-8 bg-gradient-to-br from-zinc-900/50 to-black/50 relative overflow-hidden">
+            {/* Decorative elements */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-500/10 rounded-full blur-3xl transform translate-x-32 -translate-y-32" />
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl transform -translate-x-32 translate-y-32" />
+            
+            <div className="relative z-10 w-full">
+              <img
+                src="/headimg.jpeg"
+                alt="listening to music"
+                className="w-full h-full max-h-[560px] object-cover rounded-2xl shadow-2xl transition-transform duration-700 group-hover:scale-105 border border-yellow-900/20"
+                style={{ display: 'block' }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Enhanced caption with icon */}
+        <div className="px-6 py-6 border-t border-yellow-900/20 bg-gradient-to-r from-zinc-900 to-black">
+          <div className="flex items-center justify-center gap-3 max-w-3xl mx-auto">
+            <svg className="w-5 h-5 text-yellow-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" />
+            </svg>
+            <p className="text-gray-300 text-center leading-relaxed">
+              I enjoy listening to songs — it's how I unwind and find inspiration. 
+              <span className="text-yellow-400 font-medium ml-1 inline-flex items-center gap-1 group-hover:text-yellow-300 transition-colors">
+                Click the player to open the music site
+                <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+          {/* ===== end Hobby Section ===== */}
+
         </div>
       </section>
 
@@ -487,7 +809,6 @@ export default function Portfolio() {
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
       />
 
-      {/* Animation Styles – only for this page */}
       <style>{`
         @keyframes float {
           0%, 100% { transform: translateY(0px) translateX(0px); }
@@ -538,6 +859,34 @@ export default function Portfolio() {
         @keyframes marqueeRight {
           0% { transform: translateX(-50%); }
           100% { transform: translateX(0); }
+        }
+
+        /* small helper to make scrollbar thinner where supported */
+        .scrollbar-thin {
+          scrollbar-width: thin;
+        }
+        .scrollbar-thumb-white\\/20::-webkit-scrollbar {
+          height: 8px;
+        }
+        .scrollbar-thumb-white\\/20::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .scrollbar-thumb-white\\/20::-webkit-scrollbar-thumb {
+          background: rgba(255,255,255,0.12);
+          border-radius: 999px;
+        }
+
+        /* clamp 2-line descriptions (requires modern browsers) */
+        .line-clamp-2 {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        /* ensure small screens show stacked layout cleanly */
+        @media (max-width: 767px) {
+          .grid-cols-1.md\\:grid-cols-\\[1fr_1.4fr\\] { grid-template-columns: 1fr; }
         }
       `}</style>
     </div>
