@@ -6,7 +6,7 @@ import Skills from '../components/Skills';
 import Projects from '../components/Projects';
 import Hobby from '../components/Hobby';
 import Particles from '../components/Particles';
-import Freelance from '../components/Freelance';
+import Freelance from '../components/FreeLance';
 
 export default function Home() {
 
