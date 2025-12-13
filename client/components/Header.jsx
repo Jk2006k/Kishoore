@@ -9,10 +9,14 @@ export default function Header() {
   };
 
   return (
-    <header className="py-8 px-10 relative z-20">
+    <header className="py-0 px-0 relative z-0">
       <nav className="max-w-7xl mx-auto flex justify-between items-center">
         <div className="flex items-center">
-          <img src="/logo.png" alt="Logo" className="h-16 w-16 object-contain opacity-90" />
+        <div className="hidden sm:flex items-center justify-center">
+          <div className="hidden sm:flex items-center justify-center">
+          <img src="/logo.png" alt="Logo" className="h-20 w-20 object-contain opacity-95" />
+        </div>
+        </div>
         </div>
         <ul className="hidden md:flex gap-10">
           <li>

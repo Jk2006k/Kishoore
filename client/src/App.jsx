@@ -53,7 +53,7 @@ export default function Home() {
           className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 transition-opacity duration-500"
         >
           <div className="flex flex-col items-center gap-6 px-6">
-            <img src="/logo.png" alt="Logo" className="h-20 w-20 object-contain opacity-95" />
+            <img src="/logo.png" alt="Logo" className="hidden sm:block h-20 w-20 object-contain opacity-95" />
             <div className="flex items-center gap-3">
               <svg className="w-8 h-8 animate-spin text-yellow-400" viewBox="0 0 24 24" fill="none">
                 <circle cx="12" cy="12" r="10" stroke="rgba(212,175,55,0.15)" strokeWidth="4" />
