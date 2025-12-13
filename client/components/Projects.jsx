@@ -1,12 +1,12 @@
 import React, {useState,useEffect} from 'react'
 const projects=[
   {id:1,title:'VoteAura',desc:'A secure online e-ballot application with UD-ID verification and admin approval flow.',imageSrc:'./voteaura.jpg',href:'https://voteaura.onrender.com'},
-  {id:2,title:'Zenth',desc:'Upload PDFs and auto-generate potential questions using OCR + AI (prototype).',imageSrc:'./Zenth.jpg',href:'https://zenth-iota.vercel.app'},
+  {id:2,title:'HP',desc:'Not quite love. Not just friends. But the music knows.',imageSrc:'./hp.png',href:'https://github.com/Jk2006k/hearpoint'},
   {id:3,title:'Note Your Day',desc:'"Capture your day, cherish your moments — write, save, and relive your memories."',imageSrc:'./Note.jpg',href:'https://note-your-day-hkp.vercel.app/'},
   {id:4,title:'Karangal',desc:'Booknearby professionals in minutes , Fast service. Trusted Hands',imageSrc:'./karangal.png',href:'https://karangal.online'},
   {id:5,title:'RTR',desc:'Transform your web React applications into native mobile apps in seconds',imageSrc:'./rtr.png',href:'https://rtr-puce.vercel.app/'},
   {id:6,title:'Zenth',desc:'Upload PDFs and auto-generate potential questions using OCR + AI (prototype).',imageSrc:'./zenth.png',href:'https://zenth-iota.vercel.app'},
-  {id:7,title:'University Admin',desc:'University Management portal: courses, enrollments and professor assignment features.',imageSrc:'https://via.placeholder.com/800x480?text=University+Admin',href:'/projects/university-admin'}
+  {id:7,title:'Task Management System',desc:'An app that lets users create projects, track time spent, and analyze productivity efficiently.',imageSrc:'https://via.placeholder.com/800x480?text=University+Admin',href:'https://task-management-system-one-roan.vercel.app'}
 ]
 export default function Projects(){
   const [current,setCurrent]=useState(0)
